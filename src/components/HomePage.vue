@@ -1,12 +1,12 @@
 <template>
-	<div class="flex flex-col py-10 px-28 space-y-8 font-mono">
+	<div class="flex flex-col py-10 px-28 xl:px-96 space-y-8 font-mono">
 		<div class="m-auto flex flex-col space-y-2">
 			<h1 class="text-6xl">codethetoy</h1>
 			<p class="text-2xl"><i>a toy languange for learners simpler than lua and python.</i></p>
-			<p class="font-bold">written in freaking JS.</p>
-			<p class="text-xs text-italic"><i>by x0rvet.</i></p>
+			<p class="font-bold">written in fricking JS.</p>
+			<p class="text-xs text-italic"><i>by xorvet.</i></p>
 		</div>
-		<textarea class="m-auto p-5 bg-neutral-800 rounded-lg h-30v w-75v text-white outline-none" id="CodeArea"/>
+		<textarea class="m-auto p-5 bg-neutral-800 rounded-lg h-30v w-full text-white outline-none resize-y" id="CodeArea"/>
 		<button class="m-auto bg-green-400 text-white px-5 py-2 text-3xl rounded-lg" v-on:click="Out">run</button>
 		<div class="m-auto flex flex-col space-y-2 text-slate-500" v-show="ShowOutput">
 			<p>Output:</p>

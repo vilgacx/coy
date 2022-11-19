@@ -1,5 +1,5 @@
 # codethetoy
-minmal toy programing language written is freaking js.
+minmal toy programing language written is fricking js.
 
 ## Project setup
 ```

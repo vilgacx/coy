@@ -6,7 +6,7 @@
 			<p class="font-bold">written in fricking JS.</p>
 			<p class="text-xs text-italic"><i>by xorvet.</i></p>
 		</div>
-		<textarea class="m-auto p-5 bg-neutral-800 rounded-lg h-30v w-full text-white outline-none resize-y" id="CodeArea"/>
+		<textarea class="m-auto p-5 bg-neutral-800 rounded-lg h-30v w-full text-white outline-none resize-y" v-model="CodeArea"/>
 		<button class="m-auto bg-green-400 text-white px-5 py-2 text-3xl rounded-lg" v-on:click="Out">run</button>
 		<div class="m-auto flex flex-col space-y-2 text-slate-500" v-show="ShowOutput">
 			<p>Output:</p>
@@ -19,19 +19,20 @@
 export default {
 	data() {
 		return {
-			"ShowOutput": false,
-			"reserved": ["store","in","repeat","times","if","else","then","say"],
-			"logicc": [">","<","="],
-			"variables": {},
-			"dothen": true,
-			"output": "",
-			"looped": [],
+      CodeArea: "",
+			ShowOutput: false,
+			reserved: ["store","in","repeat","times","if","else","then","say"],
+			logicc: [">","<","="],
+			variables: {},
+			dothen: true,
+			output: "",
+			looped: [],
 		}
 	},
 	methods: {
 		Out: async function() {
 			this.output = "";
-			let code = document.getElementById("CodeArea").value;
+			let code = this.CodeArea;
 			let arraycode = code.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
 			for (let i = 0; i < arraycode.length; i++) {
 				if ("store" === arraycode[i] && this.dothen == true) {

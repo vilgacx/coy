@@ -1,0 +1,165 @@
+<template>
+  <div class="pg-body">
+    <div class="areas">
+      <div class="area-nav">
+        <div class="heading-div">
+          <p class="m-auto">CODE AREA</p>
+        </div>
+        <div class="btn-div">
+          <button class="btn-icon" @click="Out">
+            <RunIcon class="icon" />
+          </button>
+          <button class="btn-icon">
+            <StopIcon class="icon" />
+          </button>
+          <button class="btn-icon">
+            <DeleteIcon class="w-12 h-12" />
+          </button>
+        </div>
+      </div>
+      <textarea class="code-area" v-model="CodeArea"></textarea>
+    </div>
+    <div class="areas">
+      <div class="area-nav">
+        <div class="heading-div">
+          <p class="m-auto">OUTPUT</p>
+        </div>
+        <div class="btn-div">
+          <button class="btn-icon">
+            <DeleteIcon class="w-12 h-12" />
+          </button>
+        </div>
+      </div>
+      <div class="output-div">
+        <p>{{ output }}</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import RunIcon from "../components/RunIcon.vue";
+import StopIcon from "../components/StopIcon.vue";
+import DeleteIcon from "../components/DeleteIcon.vue";
+
+export default {
+  components: { RunIcon, StopIcon, DeleteIcon },
+  data() {
+    return {
+      CodeArea: "",
+      ShowOutput: false,
+      reserved: ["store", "in", "say", "if", "else", "then", "repeat", "times", "delay", "."],
+      logic: [">", "<", "=", ">=", "<="],
+      artihmatic: ["+", "-", "*", "/", "**", "//"],
+      variables: {},
+      dothen: true,
+      output: "",
+      looped: [],
+    }
+  },
+  methods: {
+    Out: function () {
+      this.output = "";
+      const arraycode = (this.CodeArea).match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
+      for (let i = 0; i < arraycode.length; i++) {
+        if ("store" === arraycode[i] && this.dothen === true) {
+          if (isNaN(+(arraycode[i + 3])) === false) {
+            this.output = `Error at ${i + 3}: numbers cannot be variables`;
+          } else if ((this.reserved).includes(arraycode[i + 3]) === true || (this.logic).includes(arraycode[i + 3]) === true || (this.artihmatic).includes(arraycode[i + 3]) === true) {
+            this.output = `Error at ${i + 3}: reserved words cannot be variables`;
+          } else if (arraycode[i + 3].includes("'") || arraycode[i + 3].includes('"')) {
+            this.output = `Error at ${i + 3}: " or ' not allowed`;
+          } else if (arraycode[i + 2] !== "in") {
+            this.output = `Error at ${i + 2}: syntax error; use "in" properly. for eg: store <SOME VALUE> in <VARIABLE>`;
+          } else if (isNaN(+(arraycode[i + 1])) === true && ((arraycode[i + 1]).startsWith('"') === false && (arraycode[i + 1]).endsWith('"') === false)) {
+            this.output = `Error at ${i + 1}: encapsulate text in double-quotes. for eg: "Text"`;
+          } else {
+            this.variables[arraycode[i + 3]] = arraycode[i + 1];
+          }
+        } else if ("say" == arraycode[i] && this.dothen === true) {
+          if (Object.keys(this.variables).includes(arraycode[i + 1]) === true) {
+            this.output = this.variables[arraycode[i + 1]];
+          } else if (isNaN(+(arraycode[i + 1])) === true && ((arraycode[i + 1]).startsWith('"') === false && (arraycode[i + 1]).endsWith('"') === false)) {
+            this.output = `Error at ${i + 1}: encapsulate text in double-quotes. for eg: "Text"`;
+          } else if (isNaN(+arraycode[i + 1]) === false) {
+            this.output = arraycode[i + 1];
+          } else {
+            this.output = (arraycode[i + 1]).slice(1, (arraycode[i + 1]).length - 1);
+          }
+        } else if ("if" === arraycode[i] && ("then" === arraycode[i + 4] || "then" === arraycode[i + 5]) && (this.logic).includes(arraycode[i+2]) === true && this.dothen === true) {
+          const vararray = (Object.keys(this.variables));
+          let elements = [];
+
+          if (vararray.includes(arraycode[i + 1])) {
+            elements.push(this.variables[arraycode[i + 1]]);
+          } else {
+            elements.push(arraycode[i + 1]);
+          }
+
+          if (vararray.includes(arraycode[i + 3])) {
+            elements.push(this.variables[arraycode[i + 3]]);
+          } else {
+            elements.push(arraycode[i + 3]);
+          }
+          
+          if (arraycode[i+2] === "=") {
+            this.dothen = eval(`${elements[0]} === ${elements[1]}`);
+          } else {
+            this.dothen = eval(`${elements[0]} ${arraycode[i+2]} ${elements[1]}`);
+          }
+          console.log(elements);
+        } else if ("else" === arraycode[i]) {
+          this.dothen = true;
+        }
+
+        /** 
+        } else if ("repeat" == arraycode[i] && "times" == arraycode[i+3]) {
+          for(let i = 0; i < parseInt(arraycode[i+2]); i++) {
+            this.looped.push(arraycode[i+1]);
+          }
+        }
+        **/
+      }
+      console.log(JSON.parse(JSON.stringify(this.variables)));
+      this.variables = {};
+    }
+  }
+}
+</script>
+
+<style scoped>
+.pg-body {
+  @apply w-full grid grid-cols-2 gap-10;
+}
+
+.areas {
+  @apply flex flex-col w-full border-2 border-white;
+}
+
+.area-nav {
+  @apply h-8v w-full bg-white flex text-center text-4xl font-bold justify-between px-6;
+}
+
+.heading-div {
+  @apply h-full flex flex-col;
+}
+
+.code-area {
+  @apply h-full w-full outline-none bg-black text-white px-8 py-6 text-2xl;
+}
+
+.output-div {
+  @apply h-full w-full text-white px-8 py-6 text-2xl;
+}
+
+.btn-div {
+  @apply h-full flex space-x-6;
+}
+
+.btn-icon {
+  @apply m-auto outline-none;
+}
+
+.icon {
+  @apply w-14 h-14
+}</style>

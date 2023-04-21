@@ -1,2 +1,2 @@
 # coy
-minmal toy programing language written is freaking js.
+minmal web based programing languages.

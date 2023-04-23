@@ -48,9 +48,9 @@ export default {
     return {
       CodeArea: "",
       ShowOutput: false,
-      reserved: ["store", "in", "say", "if", "else", "then", "repeat", "times", "delay", "."],
+      reserved: ["store", "in", "say", "if", "else", "then", "repeat", "times", "delay", "clear"],
       logic: [">", "<", "=", ">=", "<="],
-      artihmatic: ["+", "-", "*", "/", "**", "//"],
+      artihmatic: ["+", "-", "*", "/", "**", "//", "(", ")"],
       variables: {},
       dothen: true,
       output: "",
@@ -60,56 +60,18 @@ export default {
   methods: {
     Out: function () {
       this.output = "";
-      const arraycode = (this.CodeArea).match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
+      const arraycode = (this.CodeArea).match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
       for (let i = 0; i < arraycode.length; i++) {
         if ("store" === arraycode[i] && this.dothen === true) {
-          if (isNaN(+(arraycode[i + 3])) === false) {
-            this.output = `Error at ${i + 3}: numbers cannot be variables`;
-          } else if ((this.reserved).includes(arraycode[i + 3]) === true || (this.logic).includes(arraycode[i + 3]) === true || (this.artihmatic).includes(arraycode[i + 3]) === true) {
-            this.output = `Error at ${i + 3}: reserved words cannot be variables`;
-          } else if (arraycode[i + 3].includes("'") || arraycode[i + 3].includes('"')) {
-            this.output = `Error at ${i + 3}: " or ' not allowed`;
-          } else if (arraycode[i + 2] !== "in") {
-            this.output = `Error at ${i + 2}: syntax error; use "in" properly. for eg: store <SOME VALUE> in <VARIABLE>`;
-          } else if (isNaN(+(arraycode[i + 1])) === true && ((arraycode[i + 1]).startsWith('"') === false && (arraycode[i + 1]).endsWith('"') === false)) {
-            this.output = `Error at ${i + 1}: encapsulate text in double-quotes. for eg: "Text"`;
-          } else {
-            this.variables[arraycode[i + 3]] = arraycode[i + 1];
-          }
+          this.StoreFn(arraycode, i);
         } else if ("say" == arraycode[i] && this.dothen === true) {
-          if (Object.keys(this.variables).includes(arraycode[i + 1]) === true) {
-            this.output = this.variables[arraycode[i + 1]];
-          } else if (isNaN(+(arraycode[i + 1])) === true && ((arraycode[i + 1]).startsWith('"') === false && (arraycode[i + 1]).endsWith('"') === false)) {
-            this.output = `Error at ${i + 1}: encapsulate text in double-quotes. for eg: "Text"`;
-          } else if (isNaN(+arraycode[i + 1]) === false) {
-            this.output = arraycode[i + 1];
-          } else {
-            this.output = (arraycode[i + 1]).slice(1, (arraycode[i + 1]).length - 1);
-          }
-        } else if ("if" === arraycode[i] && ("then" === arraycode[i + 4] || "then" === arraycode[i + 5]) && (this.logic).includes(arraycode[i+2]) === true && this.dothen === true) {
-          const vararray = (Object.keys(this.variables));
-          let elements = [];
-
-          if (vararray.includes(arraycode[i + 1])) {
-            elements.push(this.variables[arraycode[i + 1]]);
-          } else {
-            elements.push(arraycode[i + 1]);
-          }
-
-          if (vararray.includes(arraycode[i + 3])) {
-            elements.push(this.variables[arraycode[i + 3]]);
-          } else {
-            elements.push(arraycode[i + 3]);
-          }
-          
-          if (arraycode[i+2] === "=") {
-            this.dothen = eval(`${elements[0]} === ${elements[1]}`);
-          } else {
-            this.dothen = eval(`${elements[0]} ${arraycode[i+2]} ${elements[1]}`);
-          }
-          console.log(elements);
+          this.SayFn(arraycode, i);
+        } else if ("if" === arraycode[i] && ("then" === arraycode[i + 4] || "then" === arraycode[i + 5]) && (this.logic).includes(arraycode[i + 2]) === true && this.dothen === true) {
+          this.IfThenFn(arraycode, i);
         } else if ("else" === arraycode[i]) {
-          this.dothen = true;
+          this.ElseFn();
+        } else if ("repeat" === "") {
+
         }
 
         /** 
@@ -122,6 +84,113 @@ export default {
       }
       console.log(JSON.parse(JSON.stringify(this.variables)));
       this.variables = {};
+    },
+    StoreFn: function (arraycode, i) {
+      if (isNaN(+(arraycode[i + 3])) === false) {
+        this.output = `Error at ${i + 3}: numbers cannot be variables`;
+      } else if ((this.reserved).includes(arraycode[i + 3]) === true || (this.logic).includes(arraycode[i + 3]) === true || (this.artihmatic).includes(arraycode[i + 3]) === true) {
+        this.output = `Error at ${i + 3}: reserved words cannot be variables`;
+      } else if (arraycode[i + 3].includes("'") || arraycode[i + 3].includes('"')) {
+        this.output = `Error at ${i + 3}: " or ' not allowed`;
+      } else if (arraycode[i + 2] !== "in") {
+        this.output = `Error at ${i + 2}: syntax error; use "in" properly. for eg: store <SOME VALUE> in <VARIABLE>`;
+      } else if (arraycode[i + 1].startsWith("(") === true && arraycode[i + 1].endsWith(")") === true) {
+        if ((this.artihmatic).some((item) => ((arraycode[i + 1]).split("")).includes(item)) === true) {
+          try {
+            const vals = this.variables;
+            for (const key in vals) {
+              eval(`const ${key} = vals[key];`);
+            }
+            this.variables[arraycode[i + 3]] = eval(arraycode[i + 1]);
+          } catch (e) {
+            this.output = `Error at ${i + 1}: expression not valid`;
+          }
+        } else {
+          this.output = `Error at ${i + 1}: expression not valid`;
+        }
+      } else if (isNaN(+(arraycode[i + 1])) === true && ((arraycode[i + 1]).startsWith('"') === false && (arraycode[i + 1]).endsWith('"') === false)) {
+        this.output = `Error at ${i + 1}: encapsulate text in double-quotes. for eg: "Text"`;
+      } else {
+        this.variables[arraycode[i + 3]] = arraycode[i + 1];
+      }
+    },
+    SayFn: function (arraycode, i) {
+      if (Object.keys(this.variables).includes(arraycode[i + 1]) === true) {
+        this.output = this.variables[arraycode[i + 1]];
+      } else if (arraycode[i + 1].startsWith("(") === true && arraycode[i + 1].endsWith(")") === true) {
+        if ((this.artihmatic).some((item) => ((arraycode[i + 1]).split("")).includes(item)) === true) {
+          try {
+            const vals = this.variables;
+            for (const key in vals) {
+              eval(`const ${key} = vals[key];`);
+            }
+            this.output = eval(arraycode[i + 1]);
+          } catch (e) {
+            this.output = `Error at ${i + 1}: expression not valid`;
+          }
+        } else {
+          this.output = `Error at ${i + 1}: expression not valid`;
+        }
+      } else if (isNaN(+(arraycode[i + 1])) === true && ((arraycode[i + 1]).startsWith('"') === false && (arraycode[i + 1]).endsWith('"') === false)) {
+        this.output = `Error at ${i + 1}: encapsulate text in double-quotes. for eg: "Text"`;
+      } else if (isNaN(+arraycode[i + 1]) === false) {
+        this.output = arraycode[i + 1];
+      } else {
+        this.output = (arraycode[i + 1]).slice(1, (arraycode[i + 1]).length - 1);
+      }
+    },
+    IfThenFn: function (arraycode, i) {
+      const vararray = (Object.keys(this.variables));
+      let elements = [];
+
+      if (vararray.includes(arraycode[i + 1])) {
+        elements.push(this.variables[arraycode[i + 1]]);
+      } else if (arraycode[i + 1].startsWith("(") === true && arraycode[i + 1].endsWith(")") === true) {
+        if ((this.artihmatic).some((item) => ((arraycode[i + 1]).split("")).includes(item)) === true) {
+          try {
+            const vals = this.variables;
+            for (const key in vals) {
+              eval(`const ${key} = vals[key];`);
+            }
+            elements.push(eval(arraycode[i + 1]));
+          } catch (e) {
+            this.output = `Error at ${i + 1}: expression not valid`;
+          }
+        } else {
+          this.output = `Error at ${i + 1}: expression not valid`;
+        }
+      } else {
+        elements.push(arraycode[i + 1]);
+      }
+
+      if (vararray.includes(arraycode[i + 3])) {
+        elements.push(this.variables[arraycode[i + 3]]);
+      } else if (arraycode[i + 3].startsWith("(") === true && arraycode[i + 3].endsWith(")") === true) {
+        if ((this.artihmatic).some((item) => ((arraycode[i + 3]).split("")).includes(item)) === true) {
+          try {
+            const vals = this.variables;
+            for (const key in vals) {
+              eval(`const ${key} = vals[key];`);
+            }
+            elements.push(eval(arraycode[i + 3]));
+          } catch (e) {
+            this.output = `Error at ${i + 1}: expression not valid`;
+          }
+        } else {
+          this.output = `Error at ${i + 1}: expression not valid`;
+        }
+      } else {
+        elements.push(arraycode[i + 3]);
+      }
+
+      if (arraycode[i + 2] === "=") {
+        this.dothen = eval(`${elements[0]} === ${elements[1]}`);
+      } else {
+        this.dothen = eval(`${elements[0]} ${arraycode[i + 2]} ${elements[1]}`);
+      }
+    },
+    ElseFn: function () {
+      this.dothen = true;
     }
   }
 }
@@ -162,4 +231,5 @@ export default {
 
 .icon {
   @apply w-14 h-14
-}</style>
+}
+</style>

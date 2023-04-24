@@ -70,21 +70,17 @@ export default {
         } else if ("else" === arraycode[i]) {
           this.ElseFn();
         } else if ("repeat" == arraycode[i] && "say" === arraycode[i + 1] && "times" == arraycode[i + 4]) {
-          const looparray = [];
-          for (let j = 0; j < parseInt(arraycode[i + 3]); j++) {
-            looparray.push("say", `${arraycode[i + 2]}`);
-          }
-          ((arraycode.slice(0, i + 5)).concat(looparray)).concat(arraycode.slice(i + 5, arraycode.length));
+          this.RepeatFn(arraycode, i);
         }
       }
     },
-    NewLine: function() {
+    NewLine: function () {
       if (this.output !== "") {
         return "\n"
       } else {
         return "";
       }
-    }, 
+    },
     StoreFn: function (arraycode, i) {
       if (isNaN(+(arraycode[i + 3])) === false) {
         this.output += `${this.NewLine()}Error at ${i + 3}: numbers cannot be variables`;
@@ -137,7 +133,6 @@ export default {
         this.output += `${this.NewLine()}` + arraycode[i + 1];
       } else {
         this.output += `${this.NewLine()}` + (arraycode[i + 1]).slice(1, (arraycode[i + 1]).length - 1);
-        console.log(this.output);
       }
     },
     IfThenFn: function (arraycode, i) {
@@ -192,6 +187,13 @@ export default {
     },
     ElseFn: function () {
       this.dothen = true;
+    },
+    RepeatFn: function (arraycode, i) {
+      const looparray = [];
+      for (let j = 0; j < parseInt(arraycode[i + 3]); j++) {
+        looparray.push("say", `${arraycode[i + 2]}`);
+      }
+      ((arraycode.slice(0, i + 5)).concat(looparray)).concat(arraycode.slice(i + 5, arraycode.length));
     }
   }
 }

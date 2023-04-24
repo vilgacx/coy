@@ -17,7 +17,7 @@
           </button>
         </div>
       </div>
-      <textarea class="code-area" v-model="CodeArea"></textarea>
+      <textarea class="code-area" spellcheck="false" v-model="CodeArea"></textarea>
     </div>
     <div class="areas">
       <div class="area-nav">
@@ -114,7 +114,12 @@ export default {
     },
     SayFn: function (arraycode, i) {
       if (Object.keys(this.variables).includes(arraycode[i + 1]) === true) {
-        this.output += `${this.NewLine()}` + this.variables[arraycode[i + 1]];
+        const val = this.variables[arraycode[i + 1]];
+        if (isNaN(val) === true) {
+          this.output += `${this.NewLine()}` + val.slice(1,val.length -1);
+        } else {
+          this.output += `${this.NewLine()}` + val;
+        }
       } else if (arraycode[i + 1].startsWith("(") === true && arraycode[i + 1].endsWith(")") === true) {
         if ((this.artihmatic).some((item) => ((arraycode[i + 1]).split("")).includes(item)) === true) {
           try {

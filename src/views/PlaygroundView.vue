@@ -216,7 +216,7 @@ export default {
       if (Object.keys(this.variables).includes(arraycode[i + 1]) === true) {
         const val = this.variables[arraycode[i + 1]];
         if (isNaN(val) === true) {
-          this.output += `${this.NewLine()}Error at ${i + 1}: variable is text reuquired number or decimals`;
+          this.output += `${this.NewLine()}Error at ${i + 1}: variable is text required number or decimals`;
         } else {
           delaytime = parseFloat(val);
         }
@@ -235,7 +235,7 @@ export default {
           this.output += `${this.NewLine()}Error at ${i + 1}: expression not valid`;
         }
       } else if (isNaN(arraycode[i + 1]) === true) {
-        this.output = `${this.NewLine()} Error at ${i + 1}: seconds should be numbers`;
+        this.output += `${this.NewLine()} Error at ${i + 1}: seconds should be in numbers or decimals`;
       } else if (isNaN(arraycode[i + 1]) === false) {
         delaytime = arraycode[i + 1];
       }

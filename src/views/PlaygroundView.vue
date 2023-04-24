@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="output-div">
-        <p>{{ output }}</p>
+        <p style="white-space: pre-line">{{ output }}</p>
       </div>
     </div>
   </div>
@@ -54,7 +54,6 @@ export default {
       variables: {},
       dothen: true,
       output: "",
-      looped: [],
     }
   },
   methods: {
@@ -70,30 +69,31 @@ export default {
           this.IfThenFn(arraycode, i);
         } else if ("else" === arraycode[i]) {
           this.ElseFn();
-        } else if ("repeat" === "") {
-
-        }
-
-        /** 
-        } else if ("repeat" == arraycode[i] && "times" == arraycode[i+3]) {
-          for(let i = 0; i < parseInt(arraycode[i+2]); i++) {
-            this.looped.push(arraycode[i+1]);
+        } else if ("repeat" == arraycode[i] && "say" === arraycode[i + 1] && "times" == arraycode[i + 4]) {
+          const looparray = [];
+          for (let j = 0; j < parseInt(arraycode[i + 3]); j++) {
+            looparray.push("say", `${arraycode[i + 2]}`);
           }
+          ((arraycode.slice(0, i + 5)).concat(looparray)).concat(arraycode.slice(i + 5, arraycode.length));
         }
-        **/
       }
-      console.log(JSON.parse(JSON.stringify(this.variables)));
-      this.variables = {};
     },
+    NewLine: function() {
+      if (this.output !== "") {
+        return "\n"
+      } else {
+        return "";
+      }
+    }, 
     StoreFn: function (arraycode, i) {
       if (isNaN(+(arraycode[i + 3])) === false) {
-        this.output = `Error at ${i + 3}: numbers cannot be variables`;
+        this.output += `${this.NewLine()}Error at ${i + 3}: numbers cannot be variables`;
       } else if ((this.reserved).includes(arraycode[i + 3]) === true || (this.logic).includes(arraycode[i + 3]) === true || (this.artihmatic).includes(arraycode[i + 3]) === true) {
-        this.output = `Error at ${i + 3}: reserved words cannot be variables`;
+        this.output += `${this.NewLine()}Error at ${i + 3}: reserved words cannot be variables`;
       } else if (arraycode[i + 3].includes("'") || arraycode[i + 3].includes('"')) {
-        this.output = `Error at ${i + 3}: " or ' not allowed`;
+        this.output += `${this.NewLine()}Error at ${i + 3}: " or ' not allowed`;
       } else if (arraycode[i + 2] !== "in") {
-        this.output = `Error at ${i + 2}: syntax error; use "in" properly. for eg: store <SOME VALUE> in <VARIABLE>`;
+        this.output += `${this.NewLine()}Error at ${i + 2}: syntax error; use "in" properly. for eg: store <SOME VALUE> in <VARIABLE>`;
       } else if (arraycode[i + 1].startsWith("(") === true && arraycode[i + 1].endsWith(")") === true) {
         if ((this.artihmatic).some((item) => ((arraycode[i + 1]).split("")).includes(item)) === true) {
           try {
@@ -103,13 +103,13 @@ export default {
             }
             this.variables[arraycode[i + 3]] = eval(arraycode[i + 1]);
           } catch (e) {
-            this.output = `Error at ${i + 1}: expression not valid`;
+            this.output += `${this.NewLine()}Error at ${i + 1}: expression not valid`;
           }
         } else {
-          this.output = `Error at ${i + 1}: expression not valid`;
+          this.output += `${this.NewLine()}Error at ${i + 1}: expression not valid`;
         }
       } else if (isNaN(+(arraycode[i + 1])) === true && ((arraycode[i + 1]).startsWith('"') === false && (arraycode[i + 1]).endsWith('"') === false)) {
-        this.output = `Error at ${i + 1}: encapsulate text in double-quotes. for eg: "Text"`;
+        this.output += `${this.NewLine()}Error at ${i + 1}: encapsulate text in double-quotes. for eg: "Text"`;
       } else {
         this.variables[arraycode[i + 3]] = arraycode[i + 1];
       }
@@ -124,19 +124,20 @@ export default {
             for (const key in vals) {
               eval(`const ${key} = vals[key];`);
             }
-            this.output = eval(arraycode[i + 1]);
+            this.output += `${this.NewLine()}` + eval(arraycode[i + 1]);
           } catch (e) {
-            this.output = `Error at ${i + 1}: expression not valid`;
+            this.output += `${this.NewLine()}Error at ${i + 1}: expression not valid`;
           }
         } else {
-          this.output = `Error at ${i + 1}: expression not valid`;
+          this.output += `${this.NewLine()}Error at ${i + 1}: expression not valid`;
         }
       } else if (isNaN(+(arraycode[i + 1])) === true && ((arraycode[i + 1]).startsWith('"') === false && (arraycode[i + 1]).endsWith('"') === false)) {
-        this.output = `Error at ${i + 1}: encapsulate text in double-quotes. for eg: "Text"`;
+        this.output += `${this.NewLine()}Error at ${i + 1}: encapsulate text in double-quotes. for eg: "Text"`;
       } else if (isNaN(+arraycode[i + 1]) === false) {
-        this.output = arraycode[i + 1];
+        this.output += `${this.NewLine()}` + arraycode[i + 1];
       } else {
-        this.output = (arraycode[i + 1]).slice(1, (arraycode[i + 1]).length - 1);
+        this.output += `${this.NewLine()}` + (arraycode[i + 1]).slice(1, (arraycode[i + 1]).length - 1);
+        console.log(this.output);
       }
     },
     IfThenFn: function (arraycode, i) {
@@ -154,10 +155,10 @@ export default {
             }
             elements.push(eval(arraycode[i + 1]));
           } catch (e) {
-            this.output = `Error at ${i + 1}: expression not valid`;
+            this.output = `${this.NewLine()}Error at ${i + 1}: expression not valid`;
           }
         } else {
-          this.output = `Error at ${i + 1}: expression not valid`;
+          this.output = `${this.NewLine()}Error at ${i + 1}: expression not valid`;
         }
       } else {
         elements.push(arraycode[i + 1]);
@@ -174,10 +175,10 @@ export default {
             }
             elements.push(eval(arraycode[i + 3]));
           } catch (e) {
-            this.output = `Error at ${i + 1}: expression not valid`;
+            this.output += `${this.NewLine()}Error at ${i + 1}: expression not valid`;
           }
         } else {
-          this.output = `Error at ${i + 1}: expression not valid`;
+          this.output += `${this.NewLine()}Error at ${i + 1}: expression not valid`;
         }
       } else {
         elements.push(arraycode[i + 3]);

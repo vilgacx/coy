@@ -58,8 +58,9 @@ export default {
     }
   },
   methods: {
-    Out: async function () {
-      this.output = "";
+    Out: async function () { 
+      this.output = "";    
+
       this.arraycode = (this.CodeArea).match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
       for (let i = 0; i < this.arraycode.length; i++) {
         if ("store" === this.arraycode[i] && this.dothen === true) {
@@ -72,13 +73,15 @@ export default {
           this.ElseFn();
         } else if ("repeat" === this.arraycode[i] && (this.arraycode[i + 1].startsWith("(") === true && this.arraycode[i + 1].endsWith(")") === true) && "times" === this.arraycode[i + 3] && this.dothen === true) {
           this.RepeatFn(this.arraycode, i);
-        } else if ("delay" === this.arraycode[i] && this.arraycode[i + 2] === "seconds") {
+        } else if ("delay" === this.arraycode[i] && this.arraycode[i + 2] === "seconds" && this.dothen === true) {
           await (new Promise(res => setTimeout(res, this.DelayFn(this.arraycode, i))));
-        } else if ("clear" === this.arraycode[i]) {
+        } else if ("clear" === this.arraycode[i] && this.dothen === true) {
           this.output = "";
         }
       }
+
       this.variables = {};
+      this.dothen = true;
     },
     NewLine: function () {
       if (this.output !== "") {

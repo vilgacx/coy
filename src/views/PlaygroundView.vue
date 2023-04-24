@@ -48,8 +48,8 @@ export default {
     return {
       CodeArea: "",
       ShowOutput: false,
-      reserved: ["store", "in", "say", "if", "else", "then", "repeat", "times", "delay", "clear"],
-      logic: [">", "<", "==","!=",">=", "<=",],
+      reserved: ["store", "in", "say", "if", "else", "then", "repeat", "times", "delay", "seconds", "clear"],
+      logic: [">", "<", "==", "!=", ">=", "<=",],
       artihmatic: ["+", "-", "*", "/", "**", "//", "(", ")"],
       variables: {},
       dothen: true,
@@ -58,7 +58,7 @@ export default {
     }
   },
   methods: {
-    Out: function () {
+    Out: async function () {
       this.output = "";
       this.arraycode = (this.CodeArea).match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
       for (let i = 0; i < this.arraycode.length; i++) {
@@ -70,8 +70,12 @@ export default {
           this.IfThenFn(this.arraycode, i);
         } else if ("else" === this.arraycode[i]) {
           this.ElseFn();
-        } else if ("repeat" === this.arraycode[i]  && (this.arraycode[i+1].startsWith("(") === true && this.arraycode[i+1].endsWith(")") === true) && "times" === this.arraycode[i + 3] && this.dothen === true) {
+        } else if ("repeat" === this.arraycode[i] && (this.arraycode[i + 1].startsWith("(") === true && this.arraycode[i + 1].endsWith(")") === true) && "times" === this.arraycode[i + 3] && this.dothen === true) {
           this.RepeatFn(this.arraycode, i);
+        } else if ("delay" === this.arraycode[i] && this.arraycode[i + 2] === "seconds") {
+          await (new Promise(res => setTimeout(res, this.DelayFn(this.arraycode, i))));
+        } else if ("clear" === this.arraycode[i]) {
+          this.output = "";
         }
       }
       this.variables = {};
@@ -116,7 +120,7 @@ export default {
       if (Object.keys(this.variables).includes(arraycode[i + 1]) === true) {
         const val = this.variables[arraycode[i + 1]];
         if (isNaN(val) === true) {
-          this.output += `${this.NewLine()}` + val.slice(1,val.length -1);
+          this.output += `${this.NewLine()}` + val.slice(1, val.length - 1);
         } else {
           this.output += `${this.NewLine()}` + val;
         }
@@ -194,11 +198,45 @@ export default {
     RepeatFn: function (arraycode, i) {
       const looparray = [];
       for (let j = 0; j < parseInt(arraycode[i + 2]); j++) {
-        const val = arraycode[i+1].slice(1,arraycode[i+1].length - 1); 
+        const val = arraycode[i + 1].slice(1, arraycode[i + 1].length - 1);
         const loopcode = val.match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
         looparray.push(...loopcode);
       }
       this.arraycode = ((arraycode.slice(0, i + 5)).concat(looparray)).concat(arraycode.slice(i + 5, arraycode.length));
+    },
+    SleepFn: function (ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    },
+
+    DelayFn: function (arraycode, i) {
+      let delaytime = 0;
+      if (Object.keys(this.variables).includes(arraycode[i + 1]) === true) {
+        const val = this.variables[arraycode[i + 1]];
+        if (isNaN(val) === true) {
+          this.output += `${this.NewLine()}Error at ${i + 1}: variable is text reuquired number or decimals`;
+        } else {
+          delaytime = parseFloat(val);
+        }
+      } else if (arraycode[i + 1].startsWith("(") === true && arraycode[i + 1].endsWith(")") === true) {
+        if ((this.artihmatic).some((item) => ((arraycode[i + 1]).split("")).includes(item)) === true) {
+          try {
+            const vals = this.variables;
+            for (const key in vals) {
+              eval(`const ${key} = vals[key];`);
+            }
+            delaytime = eval(arraycode[i + 1]);
+          } catch (e) {
+            this.output += `${this.NewLine()}Error at ${i + 1}: expression not valid`;
+          }
+        } else {
+          this.output += `${this.NewLine()}Error at ${i + 1}: expression not valid`;
+        }
+      } else if (isNaN(arraycode[i + 1]) === true) {
+        this.output = `${this.NewLine()} Error at ${i + 1}: seconds should be numbers`;
+      } else if (isNaN(arraycode[i + 1]) === false) {
+        delaytime = arraycode[i + 1];
+      }
+      return parseFloat(delaytime) * 1000;
     }
   }
 }

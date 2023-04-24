@@ -49,30 +49,32 @@ export default {
       CodeArea: "",
       ShowOutput: false,
       reserved: ["store", "in", "say", "if", "else", "then", "repeat", "times", "delay", "clear"],
-      logic: [">", "<", "=", ">=", "<="],
+      logic: [">", "<", "==","!=",">=", "<=",],
       artihmatic: ["+", "-", "*", "/", "**", "//", "(", ")"],
       variables: {},
       dothen: true,
       output: "",
+      arraycode: [],
     }
   },
   methods: {
     Out: function () {
       this.output = "";
-      const arraycode = (this.CodeArea).match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
-      for (let i = 0; i < arraycode.length; i++) {
-        if ("store" === arraycode[i] && this.dothen === true) {
-          this.StoreFn(arraycode, i);
-        } else if ("say" == arraycode[i] && this.dothen === true) {
-          this.SayFn(arraycode, i);
-        } else if ("if" === arraycode[i] && ("then" === arraycode[i + 4] || "then" === arraycode[i + 5]) && (this.logic).includes(arraycode[i + 2]) === true && this.dothen === true) {
-          this.IfThenFn(arraycode, i);
-        } else if ("else" === arraycode[i]) {
+      this.arraycode = (this.CodeArea).match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
+      for (let i = 0; i < this.arraycode.length; i++) {
+        if ("store" === this.arraycode[i] && this.dothen === true) {
+          this.StoreFn(this.arraycode, i);
+        } else if ("say" === this.arraycode[i] && this.dothen === true) {
+          this.SayFn(this.arraycode, i);
+        } else if ("if" === this.arraycode[i] && ("then" === this.arraycode[i + 4] || "then" === this.arraycode[i + 5]) && (this.logic).includes(this.arraycode[i + 2]) === true && this.dothen === true) {
+          this.IfThenFn(this.arraycode, i);
+        } else if ("else" === this.arraycode[i]) {
           this.ElseFn();
-        } else if ("repeat" == arraycode[i] && "say" === arraycode[i + 1] && "times" == arraycode[i + 4]) {
-          this.RepeatFn(arraycode, i);
+        } else if ("repeat" === this.arraycode[i]  && (this.arraycode[i+1].startsWith("(") === true && this.arraycode[i+1].endsWith(")") === true) && "times" === this.arraycode[i + 3] && this.dothen === true) {
+          this.RepeatFn(this.arraycode, i);
         }
       }
+      this.variables = {};
     },
     NewLine: function () {
       if (this.output !== "") {
@@ -179,21 +181,19 @@ export default {
         elements.push(arraycode[i + 3]);
       }
 
-      if (arraycode[i + 2] === "=") {
-        this.dothen = eval(`${elements[0]} === ${elements[1]}`);
-      } else {
-        this.dothen = eval(`${elements[0]} ${arraycode[i + 2]} ${elements[1]}`);
-      }
+      this.dothen = eval(`${elements[0]} ${arraycode[i + 2]} ${elements[1]}`);
     },
     ElseFn: function () {
       this.dothen = true;
     },
     RepeatFn: function (arraycode, i) {
       const looparray = [];
-      for (let j = 0; j < parseInt(arraycode[i + 3]); j++) {
-        looparray.push("say", `${arraycode[i + 2]}`);
+      for (let j = 0; j < parseInt(arraycode[i + 2]); j++) {
+        const val = arraycode[i+1].slice(1,arraycode[i+1].length - 1); 
+        const loopcode = val.match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
+        looparray.push(...loopcode);
       }
-      ((arraycode.slice(0, i + 5)).concat(looparray)).concat(arraycode.slice(i + 5, arraycode.length));
+      this.arraycode = ((arraycode.slice(0, i + 5)).concat(looparray)).concat(arraycode.slice(i + 5, arraycode.length));
     }
   }
 }
@@ -221,7 +221,7 @@ export default {
 }
 
 .output-div {
-  @apply h-full w-full text-white px-8 py-6 text-2xl;
+  @apply h-80v w-full text-white px-8 py-6 text-2xl overflow-auto;
 }
 
 .btn-div {

@@ -114,7 +114,7 @@ export default {
     },
     SayFn: function (arraycode, i) {
       if (Object.keys(this.variables).includes(arraycode[i + 1]) === true) {
-        this.output = this.variables[arraycode[i + 1]];
+        this.output += this.variables[arraycode[i + 1]];
       } else if (arraycode[i + 1].startsWith("(") === true && arraycode[i + 1].endsWith(")") === true) {
         if ((this.artihmatic).some((item) => ((arraycode[i + 1]).split("")).includes(item)) === true) {
           try {

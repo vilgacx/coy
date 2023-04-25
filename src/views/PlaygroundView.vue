@@ -85,7 +85,7 @@ export default {
     },
     NewLine: function () {
       if (this.output !== "") {
-        return "\n"
+        return "\n";
       } else {
         return "";
       }

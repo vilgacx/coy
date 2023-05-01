@@ -4,26 +4,32 @@
       <tr>
         <td class="tb-items">-</td>
         <td class="tb-items">say ...</td>
+        <td></td>
       </tr>
       <tr>
         <td class="tb-items">-</td>
         <td class="tb-items">store ... in ...</td>
+        <td></td>
       </tr>
       <tr>
         <td class="tb-items">-</td>
         <td class="tb-items">if .. then .. else</td>
+        <td></td>
       </tr>
       <tr>
         <td class="tb-items">-</td>
         <td class="tb-items">repeat ... ... times</td>
+        <td></td>
       </tr>
       <tr>
         <td class="tb-items">-</td>
         <td class="tb-items">delay ... seconds</td>
+        <td></td>
       </tr>
       <tr>
         <td class="tb-items">-</td>
         <td class="tb-items">clear</td>
+        <td></td>
       </tr>
     </table>
   </div>

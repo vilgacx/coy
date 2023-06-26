@@ -1,5 +1,5 @@
 # coy
 web based toy programing languages.
-site : [xorvet.github.io/coy](https://xorvet.github.io/coy).
+site : [coylang.netlify.app](https://coylang.netlify.app/).
 (site needs to be updated)
 (documentation soon)

@@ -28,7 +28,7 @@
     </table>
     <p>Logical operators: <b>&#62;</b> (greater than), <b>&#60;</b> (lesser than), <b>==</b> (equal to), <b>!=</b> (not equal to), <b>&#62;=</b> (greater than or equal to), <b>&#60;=</b> (lesser than or equal to).</p>
     <p>Arithmatic operators: <b>+</b> (addition), <b>-</b> (subtraction), <b>*</b> (multiplication), <b>/</b> (division), <b>**</b> (exponential), <b>%</b> (modulus), <b>(</b> (opening bracket), <b>)</b> (closing bracket).</p>
-    <p class="text-white"><i>important note : this documentaion is very rough idea. will be updated soon</i></p>
+    <p class="text-white"><i>(important note : this documentaion is very rough idea. will be updated soon)</i></p>
   </div>
 </template>
 

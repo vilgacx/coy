@@ -7,8 +7,8 @@
         <router-link to="/playground"><p class="home-link">playground</p></router-link>
         <router-link to="/instructions"><p class="home-link">how to use it?</p></router-link>
       </div>
-    </div>
-    <p class="m-auto italic">note: this site needs to be heavily updated</p>
+      <p class="m-auto italic text-white">(important note: this site needs to be heavily updated)</p>
+    </div> 
   </div>
 </template>
 

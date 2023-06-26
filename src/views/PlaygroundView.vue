@@ -50,7 +50,7 @@ export default {
       ShowOutput: false,
       reserved: ["store", "in", "say", "if", "else", "then", "repeat", "times", "delay", "seconds", "clear"],
       logic: [">", "<", "==", "!=", ">=", "<=",],
-      artihmatic: ["+", "-", "*", "/", "**", "//", "(", ")"],
+      artihmatic: ["+", "-", "*", "/", "**", "%", "(", ")"],
       variables: {},
       dothen: true,
       output: "",

@@ -8,6 +8,7 @@
         <router-link to="/instructions"><p class="home-link">how to use it?</p></router-link>
       </div>
     </div>
+    <p class="m-auto italic">note: this site needs to be heavily updated</p>
   </div>
 </template>
 

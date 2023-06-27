@@ -25,6 +25,10 @@
         <td>delay [SOME WHOLE VALUE] seconds</td>
         <td><span>delay 5 seconds</span> <b>or</b> <span>delay x seconds</span> <b>(x is a variable with whole value)</b></td>
       </tr>
+      <tr>
+        <td>clear</td>
+        <td><span>clear</span> <b>(will clear the output)</b></td>
+      </tr>
     </table>
     <p>Logical operators: <b>&#62;</b> (greater than), <b>&#60;</b> (lesser than), <b>==</b> (equal to), <b>!=</b> (not equal to), <b>&#62;=</b> (greater than or equal to), <b>&#60;=</b> (lesser than or equal to).</p>
     <p>Arithmatic operators: <b>+</b> (addition), <b>-</b> (subtraction), <b>*</b> (multiplication), <b>/</b> (division), <b>**</b> (exponential), <b>%</b> (modulus), <b>(</b> (opening bracket), <b>)</b> (closing bracket).</p>

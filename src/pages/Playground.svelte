@@ -10,26 +10,35 @@
 				<button class="clear-btn">CLEAR</button>
 			</div>
 		</div>
+		<textarea class="code-area" spellcheck="false"></textarea>
 	</div>
 	<div class="ground">
 		<div class="ground-nav">
 			<div class="nav-title-div">
 				<p class="m-auto">OUTPUT</p>
 			</div>
-			<div class="">
+			<div>
 				<button class="clear-btn">CLEAR</button>
 			</div>
 		</div>
+		<div class="area">
+        <p style="white-space: pre-line">{ output }</p>
+      </div>
 	</div>
 </main>
 
+<script lang="ts">
+	let  output = "";
+</script>
+
+
 <style lang="postcss">
 	.play-body {
-		@apply p-12 grid grid-flow-row lg:grid-cols-2 bg-green-400 gap-8;
+		@apply p-12 grid grid-rows-2 lg:grid-cols-2 lg:grid-rows-none bg-green-400 gap-8;
 	}
 
 	.ground {
-		@apply w-full h-full border-2 border-black bg-white rounded-md;
+		@apply flex flex-col w-full h-full border-2 border-black bg-white rounded-md;
 	}
 
 	.ground-nav {
@@ -58,5 +67,13 @@
 
 	.clear-btn {
 		@apply exbtn bg-red-400;
+	}
+
+	.area {
+		@apply text-lg flex-1 w-full outline-none p-2 rounded-md;
+	}
+
+	.code-area {
+		@apply area outline-none resize-none;
 	}
 </style>

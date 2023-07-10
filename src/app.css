@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.body {
+	@apply font-mono flex-col flex w-full h-[100vh];
+}
+
+.main {
+  @apply w-full h-full;
+}
+
+.nav {
+	@apply flex w-full justify-between text-lg px-16 py-4 border-b border-black;
+}
+
+.nav-link {
+	@apply hover:text-blue-800;
+}

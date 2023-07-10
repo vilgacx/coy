@@ -1,24 +1,27 @@
 {
-  "name": "coy",
-  "version": "0.0.0",
+  "name": "coyy",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
-  },
-  "dependencies": {
-    "vue": "^3.2.47",
-    "vue-router": "^4.1.6"
+    "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.0.0",
+    "@sveltejs/vite-plugin-svelte": "^2.0.4",
+    "@tsconfig/svelte": "^4.0.1",
     "autoprefixer": "^10.4.14",
-    "eslint": "^8.34.0",
-    "eslint-plugin-vue": "^9.9.0",
-    "postcss": "^8.4.23",
-    "tailwindcss": "^3.3.1",
-    "vite": "^4.1.4"
+    "postcss": "^8.4.24",
+    "svelte": "^3.58.0",
+    "svelte-check": "^3.3.1",
+    "tailwindcss": "^3.3.2",
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.9"
+  },
+  "dependencies": {
+    "svelte-spa-router": "^3.3.0"
   }
 }

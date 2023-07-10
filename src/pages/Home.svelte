@@ -14,13 +14,13 @@
 	import {link} from 'svelte-spa-router';
 </script>
 
-<style>
+<style lang="postcss">
 .home-body {
-	@apply flex flex-col;
+	@apply flex flex-col p-12;
 }
 
 .content-div {
-	@apply m-auto flex-col space-y-4;
+	@apply m-auto flex flex-col space-y-4;
 }
 
 .title {

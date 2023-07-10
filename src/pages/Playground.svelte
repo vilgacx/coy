@@ -5,12 +5,12 @@
 				<p class="m-auto">CODE AREA</p>
 			</div>
 			<div class="btn-div">
-				<button class="run-btn">RUN</button>
+				<button class="run-btn" on:click={Output}>RUN</button>
 				<button class="stop-btn">STOP</button>
 				<button class="clear-btn">CLEAR</button>
 			</div>
 		</div>
-		<textarea class="code-area" spellcheck="false"></textarea>
+		<textarea class="code-area" spellcheck="false" bind:value={code}></textarea>
 	</div>
 	<div class="ground">
 		<div class="ground-nav">
@@ -22,19 +22,26 @@
 			</div>
 		</div>
 		<div class="area">
-        <p style="white-space: pre-line">{ output }</p>
+			<p style="white-space: pre-line">{ output }</p>
       </div>
 	</div>
 </main>
 
 <script lang="ts">
-	let  output = "";
+	let code : String = "";	
+	let output : String = "";
+
+	async function Output() {
+		let CodeArray: Array<String> = code.match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
+		for (let i = 0; i < CodeArray.length; i++) {
+		}
+	}
 </script>
 
 
 <style lang="postcss">
 	.play-body {
-		@apply p-12 grid grid-rows-2 lg:grid-cols-2 lg:grid-rows-none bg-green-400 gap-8;
+		@apply p-8 md:p-12 grid grid-rows-2 lg:grid-cols-2 lg:grid-rows-none bg-green-400 gap-8;
 	}
 
 	.ground {
@@ -46,7 +53,7 @@
 	}
 
 	.nav-title-div {
-		@apply text-2xl flex flex-col;
+		@apply md:text-2xl flex flex-col;
 	}
 
 	.btn-div {
@@ -54,19 +61,19 @@
 	}
 
 	.exbtn {
-		@apply text-lg p-1.5 rounded;
+		@apply text-sm md:text-lg p-1.5 rounded;
 	}
 	
 	.run-btn {
-		@apply exbtn bg-green-400;
+		@apply exbtn bg-green-400 active:bg-green-500;
 	}
 
 	.stop-btn {
-		@apply exbtn bg-red-500;
+		@apply exbtn bg-red-500 active:bg-red-700;
 	}
 
 	.clear-btn {
-		@apply exbtn bg-red-400;
+		@apply exbtn bg-red-400 active:bg-red-600;
 	}
 
 	.area {

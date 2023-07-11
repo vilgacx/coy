@@ -42,7 +42,9 @@
 		let CodeArray : Array<string> = code.match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
 		for (let i = 0; i < CodeArray.length; i++) {
 			if ("store" === CodeArray[i] && dothen === true) {
-				StoreFn([CodeArray[i],CodeArray[i+1],CodeArray[i+2],CodeArray[i+3]],i+1);
+				StoreFn([CodeArray[i+1],CodeArray[i+2],CodeArray[i+3]],i+1);
+			} else if ("say" === CodeArray[i] && dothen === true) {
+				SayFn([CodeArray[i+1]],i+1);
 			}
 		}
 		variables = {};
@@ -58,24 +60,24 @@
 		}
 
 	function StoreFn(codearray: Array<string>, index: number) {
-			if (isNaN(+(codearray[1])) === true && ((codearray[1]).startsWith('"') === false && (codearray[1]).endsWith('"') === false)) {
+			if (isNaN(+(codearray[0])) === true && ((codearray[1]).startsWith('"') === false && (codearray[0]).endsWith('"') === false)) {
 				output += `${NewLine()}Error at ${index + 1}: encapsulate text in double-quotes. for eg: "Text"`;
-			} else if (codearray[2] !== "in") {
+			} else if (codearray[1] !== "in") {
 				output += `${NewLine()}Error at ${index}: syntax error; use "in" properly. for eg: store <SOME VALUE> in <VARIABLE>`;
-			} else if (isNaN(+(codearray[3])) === false) {
+			} else if (isNaN(+(codearray[2])) === false) {
 				output += `${NewLine()}Error at ${index + 3}: numbers cannot be variables`;
-			} else if (all.includes(codearray[3]) === true) {
+			} else if (all.includes(codearray[2]) === true) {
 				output += `${NewLine()}Error at ${index + 3}: reserved words cannot be variables`;
-			} else if (codearray[3].includes("'") || code[3].includes('"')) {
+			} else if (codearray[2].includes("'") || code[2].includes('"')) {
 				output += `${NewLine()}Error at ${index + 3}: " or ' are not allowed`;
-			} else if (codearray[1].startsWith("(") === true && codearray[1].endsWith(")") === true) {
-				if ((arithmatic).some((item: string) => ((codearray[1]).split("")).includes(item)) === true) {
+			} else if (codearray[0].startsWith("(") === true && codearray[0].endsWith(")") === true) {
+				if ((arithmatic).some((item: string) => ((codearray[0]).split("")).includes(item)) === true) {
 					try {
 						const vals = variables;
 						for (const key in vals) {
 							eval(`const ${key} = vals[key];`);
 						}
-						variables[codearray[3]] = eval(codearray[1]);
+						variables[codearray[2]] = eval(codearray[0]);
 					} catch (e) {
 						output += `${NewLine()}Error at ${index + 1}: expression not valid`;
 					}
@@ -83,7 +85,38 @@
 					output += `${NewLine()}Error at ${index + 1}: expression not valid`;
 				}
 			} else {
-				variables[codearray[3]] = codearray[1];
+				variables[codearray[2]] = codearray[0];
+			}
+		}
+
+		function SayFn(codearray: Array<string>, index: number) {
+			if (Object.keys(variables).includes(codearray[0]) === true) {
+				const val = variables[codearray[0]];
+				if (isNaN(val) === true) {
+					output += `${NewLine()}` + val.slice(1, val.length - 1);
+				} else {
+					output += `${NewLine()}` + val;
+				}
+			} else if (codearray[0].startsWith("(") === true && codearray[0].endsWith(")") === true) {
+				if ((arithmatic).some((item: string) => ((codearray[0]).split("")).includes(item)) === true) {
+					try {
+						const vals = variables;
+						for (const key in vals) {
+							eval(`const ${key} = vals[key];`);
+						}
+						output += `${NewLine()}` + eval(codearray[0]);
+					} catch (e) {
+						output += `${NewLine()}Error at ${index + 1}: expression not valid`;
+					}
+				} else {
+					output += `${NewLine()}Error at ${index + 1}: expression not valid`;
+				}
+			} else if (isNaN(+(codearray[0])) === true && ((codearray[0]).startsWith('"') === false && (codearray[0]).endsWith('"') === false)) {
+				output += `${NewLine()}Error at ${index + 1}: encapsulate text in double-quotes. for eg: "Text"`;
+			} else if (isNaN(+codearray[0]) === false) {
+				output += `${NewLine()}` + codearray[0];
+			} else {
+				output += `${NewLine()}` + (codearray[0]).slice(1, (codearray[0]).length - 1);
 			}
 		}
 </script>

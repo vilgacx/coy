@@ -52,11 +52,14 @@
   const EvalCheck = (code: string) => { return code.startsWith("(") === true && code.endsWith(")") === true };
 	const EncapCheck = (code: string) => { return isNaN(+code) === true && code.startsWith('"') === false && code.endsWith('"') === false };
 
+	//common output
+	const EncapOut = (index: number) => {output += `${NewLine()}Error at ${index + 1}: encapsulate text in double-quotes. for eg: "Text"`};
+
 	//store function
   function StoreFn(codearray: Array<string>, index: number) {
     if (EncapCheck(codearray[0]) === true) {
-      output += `${NewLine()}Error at ${index + 1}: encapsulate text in double-quotes. for eg: "Text"`;
-    } else if (codearray[1] !== "in") {
+			EncapOut(index);
+		} else if (codearray[1] !== "in") {
       output += `${NewLine()}Error at ${index}: syntax error; use "in" properly. for eg: store <SOME VALUE> in <VARIABLE>`;
     } else if (isNaN(+codearray[2]) === false) {
       output += `${NewLine()}Error at ${index + 3}: numbers cannot be variables`;
@@ -83,8 +86,8 @@
     } else if (EvalCheck(codearray[0]) === true) {
 			Evaluate(codearray[0],index,() => {output += `${NewLine()}` + eval(codearray[0])});
     } else if (EncapCheck(codearray[0]) === true) {
-			output += `${NewLine()}Error at ${index+1}: encapsulate text in double-quotes. for eg: "Text"`;
-    } else if (isNaN(+codearray[0]) === false) {
+			EncapOut(index);
+		} else if (isNaN(+codearray[0]) === false) {
       output += `${NewLine()}` + codearray[0];
     } else {
       output += `${NewLine()}` + codearray[0].slice(1, codearray[0].length - 1);
@@ -131,7 +134,7 @@
   }
 
   .ground-nav {
-    @apply flex justify-between p-2 border-b-2 border-black;
+    @apply flex justify-between p-2.5 border-b-2 border-black;
   }
 
   .nav-title-div {

@@ -101,7 +101,7 @@
     }
 	}
 
-
+	//if then function
 	function IfThenfn(codearray: Array<string>, index: number) {
       const vararray = (Object.keys(variables));
       let elements = [];
@@ -125,6 +125,7 @@
       dothen = eval(`${elements[0]} ${codearray[1]} ${elements[1]}`);
 		}
 
+		//loop
 		function RepeatFn(codearray: Array<string>, index: number) {
       const looparray = [];
       for (let j = 0; j < parseInt(codearray[index+2]); j++) {

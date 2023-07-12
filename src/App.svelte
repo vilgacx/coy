@@ -12,3 +12,13 @@
 	</div>
 	<Router {routes} />
 </main>
+
+<style lang="postcss">
+	.nav {
+		@apply flex w-full justify-between text-lg px-16 py-4 border-b border-black;
+	}
+
+	.nav-link {
+		@apply hover:text-blue-800;
+	}
+</style>

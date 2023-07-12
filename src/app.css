@@ -9,11 +9,3 @@
 .main {
   @apply w-full h-full;
 }
-
-.nav {
-	@apply flex w-full justify-between text-lg px-16 py-4 border-b border-black;
-}
-
-.nav-link {
-	@apply hover:text-blue-800;
-}

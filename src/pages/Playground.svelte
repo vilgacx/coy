@@ -6,20 +6,27 @@
   let reserved: Array<string> = ["store","in","say","if","else","then","repeat","times","delay","seconds","clear",];
   let logic: Array<string> = [">", "<", "==", "!=", ">=", "<="];
   let arithmatic: Array<string> = ["+", "-", "*", "/", "**", "%", "(", ")"];
-  let all: Array<string> = [...reserved, ...logic, ...arithmatic];
+	let all: Array<string> = [...reserved, ...logic, ...arithmatic];
+	let CodeArray: Array<string> = [];
 
   async function Output() {
     output = "";
-    let CodeArray: Array<string> = code.match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
+    CodeArray = code.match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
     for (let i = 0; i < CodeArray.length; i++) {
       if ("store" === CodeArray[i] && dothen === true) {
-        StoreFn([CodeArray[i + 1], CodeArray[i + 2], CodeArray[i + 3]], i + 1);
+        StoreFn([CodeArray[i + 1], CodeArray[i + 2], CodeArray[i + 3]], i+1);
       } else if ("say" === CodeArray[i] && dothen === true) {
-        SayFn([CodeArray[i + 1]], i + 1);
+        SayFn([CodeArray[i + 1]], i+1);
+			} else if ("if" === CodeArray[i] && ("then" === CodeArray[i + 4] || "then" === CodeArray[i + 5]) && (logic).includes(CodeArray[i + 2]) === true && dothen === true) {
+				IfThenfn([CodeArray[i+1], CodeArray[i+2], CodeArray[i+3]], i+1);
+			} else if ("else" === CodeArray[i]) {
+				dothen = true;
+			} else if ("repeat" === CodeArray[i] && (EvalCheck(CodeArray[i+1]) === true) && "times" === CodeArray[i+3] && dothen === true) {
+				RepeatFn(CodeArray, i);
       }
-    }
+		}
     variables = {};
-    dothen = true;
+		dothen = true;
 	}
 	
 	//newline check
@@ -92,7 +99,42 @@
     } else {
       output += `${NewLine()}` + codearray[0].slice(1, codearray[0].length - 1);
     }
-  }
+	}
+
+
+	function IfThenfn(codearray: Array<string>, index: number) {
+      const vararray = (Object.keys(variables));
+      let elements = [];
+
+      if (vararray.includes(codearray[0])) {
+        elements.push(variables[codearray[0]]);
+      } else if (EvalCheck(codearray[0])) {
+				Evaluate(codearray[0],index,() => {elements.push(eval(codearray[0]))});
+			} else {
+        elements.push(codearray[0]);
+      }
+
+      if (vararray.includes(codearray[2])) {
+        elements.push(variables[codearray[2]]);
+      } else if (EvalCheck(codearray[2])) {
+				Evaluate(codearray[2],index,() => {elements.push(eval(codearray[2]))});
+      } else {
+        elements.push(codearray[2]);
+      }
+
+      dothen = eval(`${elements[0]} ${codearray[1]} ${elements[1]}`);
+		}
+
+		function RepeatFn(codearray: Array<string>, index: number) {
+      const looparray = [];
+      for (let j = 0; j < parseInt(codearray[index+2]); j++) {
+        const val = codearray[index+1].slice(1, codearray[index+1].length - 1);
+        const loopcode = val.match(/\([^()]*\)|(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
+        looparray.push(...loopcode);
+      }
+			CodeArray = ((codearray.slice(0, index+5)).concat(looparray)).concat(codearray.slice(index+5, codearray.length));
+		}
+
 </script>
 
 <main class="body play-body">

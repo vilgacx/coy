@@ -19,7 +19,7 @@
         SayFn([CodeArray[i + 1]], i+1);
 			} else if ("if" === CodeArray[i] && ("then" === CodeArray[i + 4] || "then" === CodeArray[i + 5]) && (logic).includes(CodeArray[i + 2]) === true && dothen === true) {
 				IfThenfn([CodeArray[i+1], CodeArray[i+2], CodeArray[i+3]], i+1);
-			} else if ("else" === CodeArray[i]) {
+			} else if ("else" === CodeArray[i] && dothen === false) {
 				dothen = true;
 			} else if ("repeat" === CodeArray[i] && (EvalCheck(CodeArray[i+1]) === true) && "times" === CodeArray[i+3] && dothen === true) {
 				RepeatFn(CodeArray, i);
@@ -122,7 +122,8 @@
         elements.push(codearray[2]);
       }
 
-      dothen = eval(`${elements[0]} ${codearray[1]} ${elements[1]}`);
+			dothen = eval(`${elements[0]} ${codearray[1]} ${elements[1]}`);
+			console.log(dothen)
 		}
 
 		//loop

@@ -188,9 +188,9 @@
     } else if (isNaN(+codearray[0]) === true) {
       output += `${NewLine()} Error at ${index}: seconds should be in numbers or decimals`;
     } else if (isNaN(+codearray[0]) === false) {
-      delaytime = Number(codearray[0]);
+      delaytime = parseFloat(codearray[0]);
     }
-    return parseFloat(delaytime) * 1000;
+    return delaytime * 1000;
   }
 
 </script>

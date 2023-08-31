@@ -1,5 +1,5 @@
 # coy
-web based programing languages.
+a web based programing languages.
 [coylang.netlify.app](https://coylang.netlify.app/) <br/>
 *Made with svelte + vite, svelte-spa-router, typescript & tailwindcss.*
 

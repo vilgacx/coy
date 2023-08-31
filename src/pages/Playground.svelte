@@ -3,7 +3,7 @@
   let output: String = "";
   let dothen: boolean = true;
   let variables = {};
-  let reserved: Array<string> = ["store","in","say","if","then","repeat","times","delay","seconds","clear",];
+  let reserved: Array<string> = ["store","in","say","if","then","repeat","times","delay","seconds","clear"];
   let logic: Array<string> = [">", "<", "==", "!=", ">=", "<="];
   let arithmatic: Array<string> = ["+", "-", "*", "/", "**", "%", "(", ")"];
   let all: Array<string> = [...reserved, ...logic, ...arithmatic];
@@ -188,7 +188,7 @@
     } else if (isNaN(+codearray[0]) === true) {
       output += `${NewLine()} Error at ${index}: seconds should be in numbers or decimals`;
     } else if (isNaN(+codearray[0]) === false) {
-      delaytime = parseFloat(codearray[0]);
+      delaytime = Number(codearray[0]);
     }
     return parseFloat(delaytime) * 1000;
   }

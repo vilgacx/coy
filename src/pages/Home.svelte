@@ -6,6 +6,8 @@
 			<a href="/play" use:link>playground</a>
 			<br>
 			<a href="/guide" use:link>how to use it?</a>
+      <br>
+      <a href="https://github.com/vilgacx/coy/blob/main/README.md#disclaimer">disclaimer</a>
 		</div>
 	</div> 
 </main>

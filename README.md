@@ -1,5 +1,5 @@
 # coy
-a toy based programing languages.
+a toy programing languages.
 [coylang.netlify.app](https://coylang.netlify.app/) <br/>
 *Made with typescript, svelte + vite, svelte-spa-router & tailwindcss.*
 
